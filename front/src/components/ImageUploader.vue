@@ -35,6 +35,7 @@
     *
     * */
     import FilePreview from "./FilePreview";
+    import {uploadImageForPost} from "../services/apiClient";
 
     export default {
         components: {
@@ -103,16 +104,14 @@
                 const self = this;
                 files.filter((f) => f.status === 'added').forEach((f) => {
                     f.status = 'uploading';
-
-                    //todo
-                    function cb() {
+                    function cb(uri) {
                         f.status = 'done';
-                        // todo
-                        f.uri = f.filename;
+                        f.uri = uri;
                         self.$emit('input', self.makeReturnArg(self.files));
                     }
-
-                    setTimeout(cb, 5000);
+                    uploadImageForPost(f.file, "2020_03/16").then((descr) => {
+                        cb(descr.url)
+                    })
                 })
             },
             attached(files) {

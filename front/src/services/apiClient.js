@@ -1,5 +1,5 @@
 const buildUri = (path) => {
-    return `${path}`;
+    return `http://localhost:8080${path}`;
 };
 const configure = (config = {}) => {
     config.headers = {

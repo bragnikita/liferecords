@@ -16,8 +16,17 @@ yarn-error.log*
 .idea
 .iml
 
+HELP.md
+.gradle
+
+back/boot_app/out/
+
 front/node_modules
 front/build
 back/node_modules
 back/build
+back/boot_app/storage
+back/boot_app/build
+
+
 
