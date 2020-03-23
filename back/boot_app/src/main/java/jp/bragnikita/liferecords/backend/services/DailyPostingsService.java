@@ -1,5 +1,7 @@
 package jp.bragnikita.liferecords.backend.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jp.bragnikita.liferecords.backend.postings.IndexModel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -60,5 +62,24 @@ public class DailyPostingsService {
             }
             return List.of();
         }
+
+        @Override
+        public IndexModel getIndex() {
+            IndexModel m;
+            File f = pathToFolder.resolve("index.json").toFile();
+            if (f.exists()) {
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    m = mapper.readValue(f, IndexModel.class);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                m = new IndexModel();
+            }
+
+            return m;
+        }
+
     }
 }

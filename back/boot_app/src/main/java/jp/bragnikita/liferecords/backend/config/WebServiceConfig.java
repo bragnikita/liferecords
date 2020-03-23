@@ -24,7 +24,7 @@ public class WebServiceConfig {
     private String storageLocation;
 
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
+    public WebMvcConfigurer applicationWebMvcConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {

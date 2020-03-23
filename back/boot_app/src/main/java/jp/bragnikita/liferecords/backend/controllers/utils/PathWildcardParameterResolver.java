@@ -12,8 +12,6 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
 
 public class PathWildcardParameterResolver implements HandlerMethodArgumentResolver {
     @Override
@@ -54,7 +52,9 @@ public class PathWildcardParameterResolver implements HandlerMethodArgumentResol
         if (uriSegments.length == prefixLength + suffixLength) {
             return requestUri;
         }
-        return Strings.join(Arrays.asList(Arrays.copyOfRange(uriSegments, prefixLength, uriSegments.length - suffixLength)), '/');
+        return Strings.join(Arrays.asList(uriSegments)
+                .subList(prefixLength, uriSegments.length - suffixLength),
+                '/');
     }
 }
 
