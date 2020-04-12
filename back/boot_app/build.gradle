@@ -20,6 +20,13 @@ dependencies {
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+	implementation 'com.drewnoakes:metadata-extractor:2.13.0'
+}
+
+bootRun {
+	args = ["--spring.profiles.active=" + "development"]
 }
 
 compileJava.dependsOn(processResources)

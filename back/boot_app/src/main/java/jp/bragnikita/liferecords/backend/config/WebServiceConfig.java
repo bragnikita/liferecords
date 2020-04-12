@@ -42,11 +42,11 @@ public class WebServiceConfig {
                 if (Path.of(storageLocation).isAbsolute()) {
                     attachmentsDir = storageLocation;
                 } else {
-                    attachmentsDir = Paths.get("storage").toAbsolutePath().toString();
+                    attachmentsDir = Paths.get(storageLocation).toAbsolutePath().toString();
                 }
                 if (!attachmentsDir.endsWith("/"))
                     attachmentsDir = attachmentsDir + "/";
-                registry.addResourceHandler("/attachments/**")
+                registry.addResourceHandler("/resources/**")
                         .addResourceLocations("file:" + attachmentsDir)
                         .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
             }

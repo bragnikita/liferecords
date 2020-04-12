@@ -14,4 +14,7 @@ public interface DailyFolderControl {
 
     IndexModel getIndex();
 
+    void deleteAttachment(String id);
+
+
 }
