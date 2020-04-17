@@ -1,4 +1,4 @@
-package jp.bragnikita.liferecords.backend.services;
+package jp.bragnikita.liferecords.backend.services.old;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jp.bragnikita.liferecords.backend.postings.IndexModel;
@@ -9,14 +9,12 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class DailyPostingsService {

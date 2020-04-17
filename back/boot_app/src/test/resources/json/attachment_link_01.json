@@ -1,0 +1,8 @@
+{
+  "title": "Jackson is cool!",
+  "type": "link",
+  "url": "https://www.baeldung.com/jackson-mapping-dynamic-object",
+  "meta": {
+    "keywords":"json"
+  }
+}

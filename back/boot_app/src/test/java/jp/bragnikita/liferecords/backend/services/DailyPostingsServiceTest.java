@@ -1,6 +1,7 @@
 package jp.bragnikita.liferecords.backend.services;
 
-import jp.bragnikita.liferecords.backend.TestUtils;
+import jp.bragnikita.liferecords.backend.services.old.DailyFolderControl;
+import jp.bragnikita.liferecords.backend.services.old.DailyPostingsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public class Posting {
 
-    public static enum Access {
+    public enum Access {
         PRIVATE, PUBLIC;
 
         @JsonValue
@@ -32,6 +32,12 @@ public class Posting {
 
     @JsonProperty("body_content")
     private String body;
+
+    private Attachment[] attachments = new Attachment[]{};
+
+    public Attachment[] getAttachments() {
+        return attachments;
+    }
 
     public Long getCreatedAt() {
         return createdAt;

@@ -30,9 +30,7 @@ public class IndexModelTest {
         );
         Assertions.assertEquals("2016-01-12", model.getId());
         Assertions.assertEquals(1, model.getContent().length);
-        Assertions.assertEquals("vkpost", model.getContent()[0].getPostingType());
         Assertions.assertEquals(Posting.Access.PRIVATE, model.getContent()[0].getAccess());
-        Assertions.assertEquals("2012-01-12T07:04:34+09:00", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(model.getContent()[0].getPublishAt()));
         Assertions.assertEquals(12, LocalDate.ofInstant(model.getDate().toInstant(), ZoneId.systemDefault()).getDayOfMonth());
 
         mapper.writeValue(System.out, model);
@@ -45,9 +43,7 @@ public class IndexModelTest {
         model.setId("2012_02");
         model.setDate(new Date(LocalDate.of(2012, 2, 1).atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()));
         Posting p = new Posting();
-        p.setPostingType("vkpost");
         p.setCreatedAt(Instant.now().toEpochMilli());
-        p.setPublishAt(Date.from(Instant.now()));
         p.setAccess(Posting.Access.PRIVATE);
         Posting[] postings = new Posting[]{
                 p,

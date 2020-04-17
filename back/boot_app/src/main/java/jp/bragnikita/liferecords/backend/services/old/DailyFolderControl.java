@@ -1,4 +1,4 @@
-package jp.bragnikita.liferecords.backend.services;
+package jp.bragnikita.liferecords.backend.services.old;
 
 import jp.bragnikita.liferecords.backend.postings.IndexModel;
 
