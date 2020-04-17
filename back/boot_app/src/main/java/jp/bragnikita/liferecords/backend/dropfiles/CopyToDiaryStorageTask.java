@@ -49,7 +49,7 @@ public class CopyToDiaryStorageTask {
     }
 
     public String copyToDate(File file, LocalDateTime date) throws IOException {
-        String dir = date.format(DateTimeFormatter.ofPattern("YYYY_MM"));
+        String dir = date.format(DateTimeFormatter.ofPattern("yyyy_MM"));
         String day = lpadTo2(date.getDayOfMonth());
 
         Path fillPathToDir = storageRoot.resolve(Path.of(dir, day));
@@ -81,7 +81,7 @@ public class CopyToDiaryStorageTask {
     }
 
     private String getExtension(String filename) {
-        String[] split = filename.split(".");
+        String[] split = filename.split("/.");
         if (split.length > 1) {
             return split[split.length - 1];
         }

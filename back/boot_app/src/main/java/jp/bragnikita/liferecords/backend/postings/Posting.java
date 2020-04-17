@@ -1,15 +1,12 @@
 package jp.bragnikita.liferecords.backend.postings;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-
-import java.util.Date;
 
 public class Posting {
 
     public static enum Access {
-        PRIVATE, PUBLIC, RESTRICTED;
+        PRIVATE, PUBLIC;
 
         @JsonValue
         public String getValue() {
@@ -17,32 +14,24 @@ public class Posting {
         }
     }
 
-    @JsonProperty("type")
-    private String postingType;
-
     @JsonProperty("created_at")
     private Long createdAt;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-    @JsonProperty("publish_at")
-    private Date publishAt;
+    @JsonProperty("updated_at")
+    private Long updatedAt;
 
-    @JsonProperty("access")
+    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+    @JsonProperty("ref_date")
+    private String referenceDate;
+
+    @JsonProperty("access_type")
     private Access access;
 
-    @JsonProperty("format")
+    @JsonProperty("body_format")
     private String format;
 
-    @JsonProperty("body")
+    @JsonProperty("body_content")
     private String body;
-
-    public String getPostingType() {
-        return postingType;
-    }
-
-    public void setPostingType(String postingType) {
-        this.postingType = postingType;
-    }
 
     public Long getCreatedAt() {
         return createdAt;
@@ -50,14 +39,6 @@ public class Posting {
 
     public void setCreatedAt(Long createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Date getPublishAt() {
-        return publishAt;
-    }
-
-    public void setPublishAt(Date publishAt) {
-        this.publishAt = publishAt;
     }
 
     public Access getAccess() {
