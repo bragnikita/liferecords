@@ -14,6 +14,9 @@ public class Posting {
         }
     }
 
+    @JsonProperty("id")
+    private String id;
+
     @JsonProperty("created_at")
     private Long createdAt;
 
@@ -69,5 +72,17 @@ public class Posting {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setReferenceDate(String referenceDate) {
+        this.referenceDate = referenceDate;
     }
 }

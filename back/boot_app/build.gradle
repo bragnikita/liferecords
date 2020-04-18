@@ -23,6 +23,8 @@ dependencies {
 
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
 	implementation 'com.drewnoakes:metadata-extractor:2.13.0'
+	implementation 'commons-io:commons-io:2.6'
+	implementation 'org.apache.commons:commons-lang3:3.10'
 }
 
 bootRun {

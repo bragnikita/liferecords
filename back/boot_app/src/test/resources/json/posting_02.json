@@ -1,0 +1,20 @@
+{
+  "id": "20200112_02",
+  "created_at": 12345,
+  "updated_at": 67842,
+  "ref_date": "20200112",
+  "access_type": "public",
+  "body_format": "plain",
+  "body_content": "There was a good day",
+  "attachments": [
+    {
+      "type": "link",
+      "url": "http://twitter.com"
+    },
+    {
+      "type": "image",
+      "id": "/2020_01/12/cover.jpeg"
+    }
+  ]
+
+}

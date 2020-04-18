@@ -11,7 +11,7 @@ public interface DayStorageService {
 
     StorageResource[] listResources();
 
-    Posting savePosting(Posting posting);
+    Posting savePosting(Posting posting, String id);
 
     StorageResource saveResource(InputStream data, String originalFileName);
 
