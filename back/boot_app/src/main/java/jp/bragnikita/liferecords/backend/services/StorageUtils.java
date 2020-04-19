@@ -19,6 +19,10 @@ public class StorageUtils {
         return (dir, name) -> FilenameUtils.isExtension(name, extensions);
     }
 
+    public static String[] list(Path dir) {
+        return StorageUtils.list(dir, (dir1, name) -> true);
+    }
+
     public static String[] list(Path dir, FilenameFilter filter) {
         String[] list = dir.toFile().list(filter);
         if (list == null) {

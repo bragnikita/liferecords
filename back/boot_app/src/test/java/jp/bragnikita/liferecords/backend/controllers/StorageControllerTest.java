@@ -64,6 +64,8 @@ public class StorageControllerTest {
 
     @Test
     void testUploadPhotoToDay() throws Exception {
+        // TODO
+
         mvc.perform(multipart("/day/{day}/photo", "20200112")
                 .file("file", TestUtils.loadFileBytesFromResources("exif_tags_phone_photo.jpg")))
                 .andExpect(status().is2xxSuccessful())
@@ -92,6 +94,7 @@ public class StorageControllerTest {
 
     @Test
     void testEditPost() throws Exception {
+        // TODO
         mvc.perform(put("/postings/{id}", "1")
                 .content(TestUtils.loadFileAsString("json/posting_01.json"))
                 .contentType(MediaType.APPLICATION_JSON))

@@ -1,15 +1,23 @@
 package jp.bragnikita.liferecords.backend.services;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Manages the file-based storage.
@@ -58,6 +66,25 @@ public class StorageServiceImpl implements StorageService {
             createDir(dayPath);
         }
         return new DayStorageServiceImpl(dayPath, key.getStorageDayId());
+    }
+
+    @Override
+    public List<String> getDaysWithContent(Integer max) {
+        final String[] monthDirs = this.root.toFile().list();
+        assert monthDirs != null;
+        final Stream<Path> days = Arrays.stream(monthDirs)
+                .sorted(Comparator.reverseOrder())
+                .map(s -> this.root.resolve(s))
+                .filter(s -> s.toFile().isDirectory())
+                .flatMap(s -> Arrays.stream(StorageUtils.list(s))
+                        .sorted(Comparator.reverseOrder())
+                        .map(s::resolve))
+                .limit(max);
+        return days.map(path -> path.subpath(path.getNameCount()-2, path.getNameCount())
+                .toString()
+                .replaceAll("_", "")
+                .replaceAll(File.separator, ""))
+                .collect(Collectors.toList());
     }
 
     private static void createDir(Path path) {

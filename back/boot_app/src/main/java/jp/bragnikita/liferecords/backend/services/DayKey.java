@@ -1,5 +1,6 @@
 package jp.bragnikita.liferecords.backend.services;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.file.Path;
@@ -13,11 +14,12 @@ public class DayKey implements StorageDayId {
     private String day;
 
     private static Pattern PARAMETER_REGEX = Pattern.compile("(\\d{4})_?(\\d{2})_?/?(\\d{2})");
+    private static Pattern POSTING_KEY_REGEX = Pattern.compile("(\\d{6})_\\d{2}");
 
     private DayKey(String year, String month, String day) {
         this.year = year;
-        this.month = month;
-        this.day = day;
+        this.month = StringUtils.leftPad(month, 2, '0');
+        this.day = StringUtils.leftPad(day, 2, '0');
     }
 
     public String getStoragePath() {
@@ -31,6 +33,14 @@ public class DayKey implements StorageDayId {
             throw new IllegalArgumentException(parameter);
         }
         return new DayKey(m.group(1), m.group(2), m.group(3));
+    }
+
+    public static DayKey fromPostingId(String postingsId) {
+        Matcher m = POSTING_KEY_REGEX.matcher(postingsId);
+        if (!m.matches()) {
+            throw new IllegalArgumentException(postingsId);
+        }
+        return DayKey.fromParameter(m.group(1));
     }
 
     @Override
@@ -81,6 +91,10 @@ public class DayKey implements StorageDayId {
     public String getMonthFolderName() {
         return String.format("%s_%s",
                 this.year, this.month);
+    }
+
+    public String getStorageFileKey(String filename) {
+        return Path.of(this.getStorageDayPath()).resolve(filename).toString();
     }
 
     public String getDayFolderName() {

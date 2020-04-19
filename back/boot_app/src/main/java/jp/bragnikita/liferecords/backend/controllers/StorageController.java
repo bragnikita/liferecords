@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jp.bragnikita.liferecords.backend.postings.Posting;
 import jp.bragnikita.liferecords.backend.postings.StorageResource;
 import jp.bragnikita.liferecords.backend.services.DayKey;
-import jp.bragnikita.liferecords.backend.services.DayStorageService;
 import jp.bragnikita.liferecords.backend.services.StorageException;
 import jp.bragnikita.liferecords.backend.services.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,8 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 public class StorageController {
@@ -36,18 +34,22 @@ public class StorageController {
     }
 
     @GetMapping("/postings")
-    Posting[] listPostings(@RequestParam Map<String, String> filters) {
-        System.out.println(filters);
-        if (filters.containsKey("day")) {
-            // TODO validate query parameter
-            return storage.getDayStorageService(filters.get("day")).listPostings();
+    public Posting[] listPostings(@RequestParam("day") String day,
+                                  @RequestParam(value = "latest", defaultValue = "10") Integer count
+    ) {
+        if (StringUtils.hasText(day)) {
+            final DayKey key = DayKey.fromParameter(day);
+            return storage.getDayStorageService(key.getStorageDayId()).listPostings();
         }
-        return new Posting[]{};
+        return storage.getDaysWithContent(count).stream()
+                .map(storage::getDayStorageService)
+                .flatMap(d -> Arrays.stream(d.listPostings()))
+                .toArray(Posting[]::new);
     }
 
     @GetMapping("/day/{day}/photo")
-    ItemResponse listDayPhotos(@PathVariable("day") String day) {
-        DayKey dayKey = DayKey.fromParameter(day);
+    public ItemResponse listDayPhotos(@PathVariable("day") String day) {
+        final DayKey dayKey = DayKey.fromParameter(day);
         StorageResource[] resources = storage.getDayStorageService(day).listResources();
         String[] paths = Arrays.stream(resources).map(resource -> {
             final String filename = resource.getOriginalFilename();
@@ -57,24 +59,27 @@ public class StorageController {
     }
 
     @PostMapping("/day/{day}/photo")
-    ItemResponse uploadPhotoToDay(@PathVariable("day") String day, @RequestParam("file") MultipartFile uploadedFile) throws IOException {
-        uploadedFile.transferTo(new File("/dev/null"));
-        return ItemResponse.item("");
+    public ItemResponse uploadPhotoToDay(@PathVariable("day") String day, @RequestParam("file") MultipartFile uploadedFile) throws IOException {
+        final DayKey dayKey = DayKey.fromParameter(day);
+        final StorageResource resource = storage.getDayStorageService(day)
+                .saveResource(uploadedFile.getInputStream(),
+                        uploadedFile.getOriginalFilename());
+        return ItemResponse.item(dayKey.getStorageFileKey(resource.getOriginalFilename()));
     }
 
     @PostMapping("/day/{day}/post")
-    Posting newPostToDay(@PathVariable("day") String day, @RequestBody Posting post) {
+    public Posting newPostToDay(@PathVariable("day") String day, @RequestBody Posting post) {
         return storage.getDayStorageService(day).savePosting(post, null);
     }
 
     @PutMapping("/postings/{id}")
-    Posting editPost(@PathVariable("id") String id, @RequestBody Posting post) {
-
-        return post;
+    public Posting editPost(@PathVariable("id") String id, @RequestBody Posting post) {
+        final DayKey key = DayKey.fromPostingId(id);
+        return storage.getDayStorageService(key.getStorageDayId()).savePosting(post, id);
     }
 
     @ExceptionHandler(StorageException.class)
-    ResponseEntity<ApiError> storageException(StorageException ex) {
+    public ResponseEntity<ApiError> storageException(StorageException ex) {
         ApiError error;
         if (env.acceptsProfiles(Profiles.of("development | test"))) {
             error = new ApiError("storage", "Storage exception", ex.getMessage());
