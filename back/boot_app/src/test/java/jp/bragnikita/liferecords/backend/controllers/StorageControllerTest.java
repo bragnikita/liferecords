@@ -95,7 +95,7 @@ public class StorageControllerTest {
     @Test
     void testEditPost() throws Exception {
         // TODO
-        mvc.perform(put("/postings/{id}", "1")
+        mvc.perform(put("/postings/{id}", "20200112_01")
                 .content(TestUtils.loadFileAsString("json/posting_01.json"))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())

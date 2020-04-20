@@ -14,7 +14,7 @@ public class DayKey implements StorageDayId {
     private String day;
 
     private static Pattern PARAMETER_REGEX = Pattern.compile("(\\d{4})_?(\\d{2})_?/?(\\d{2})");
-    private static Pattern POSTING_KEY_REGEX = Pattern.compile("(\\d{6})_\\d{2}");
+    private static Pattern POSTING_KEY_REGEX = Pattern.compile("(\\d{8})_\\d{2}");
 
     private DayKey(String year, String month, String day) {
         this.year = year;
