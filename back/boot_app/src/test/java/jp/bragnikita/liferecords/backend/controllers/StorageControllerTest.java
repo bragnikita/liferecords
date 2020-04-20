@@ -7,13 +7,17 @@ import jp.bragnikita.liferecords.backend.postings.StorageResource;
 import jp.bragnikita.liferecords.backend.services.DayStorageService;
 import jp.bragnikita.liferecords.backend.services.StorageService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.io.InputStream;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -64,10 +68,19 @@ public class StorageControllerTest {
 
     @Test
     void testUploadPhotoToDay() throws Exception {
-        // TODO
+        StorageResource res = Mockito.mock(StorageResource.class);
+        when(res.getOriginalFilename()).thenReturn("exif_tags_phone_photo.jpg");
 
+        DayStorageService dayStorageService = Mockito.mock(DayStorageService.class);
+        when(dayStorageService.saveResource(any(InputStream.class), eq("exif_tags_phone_photo.jpg")))
+                .thenReturn(res);
+
+        when(storage.getDayStorageService("20200112")).thenReturn(dayStorageService);
+
+        MockMultipartFile fileToUpload = new MockMultipartFile("file", "exif_tags_phone_photo.jpg",
+                MediaType.IMAGE_JPEG_VALUE, TestUtils.loadFileBytesFromResources("exif_tags_phone_photo.jpg"));
         mvc.perform(multipart("/day/{day}/photo", "20200112")
-                .file("file", TestUtils.loadFileBytesFromResources("exif_tags_phone_photo.jpg")))
+                .file(fileToUpload))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.item").isString());
@@ -94,7 +107,13 @@ public class StorageControllerTest {
 
     @Test
     void testEditPost() throws Exception {
-        // TODO
+
+        Posting posting = StorageServiceMockUtils.Postings
+                .fromJson("json/posting_01.json");
+        DayStorageService dayStorageService = mock(DayStorageService.class);
+        when(dayStorageService.savePosting(any(Posting.class), eq("20200112_01"))).thenReturn(posting);
+        when(storage.getDayStorageService("20200112")).thenReturn(dayStorageService);
+
         mvc.perform(put("/postings/{id}", "20200112_01")
                 .content(TestUtils.loadFileAsString("json/posting_01.json"))
                 .contentType(MediaType.APPLICATION_JSON))
