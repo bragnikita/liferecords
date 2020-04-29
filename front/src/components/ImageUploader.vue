@@ -35,7 +35,7 @@
     *
     * */
     import FilePreview from "./FilePreview";
-    import {uploadImageForPost} from "../services/apiClient";
+    import {uploadImage} from "../services/apiClient";
 
     export default {
         components: {
@@ -109,7 +109,7 @@
                         f.uri = uri;
                         self.$emit('input', self.makeReturnArg(self.files));
                     }
-                    uploadImageForPost(f.file, "2020_03/16").then((descr) => {
+                    uploadImage(f.file, "2020_03/16").then((descr) => {
                         cb(descr.url)
                     })
                 })

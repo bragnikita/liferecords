@@ -122,5 +122,10 @@ public class StorageControllerTest {
                 .andExpect(jsonPath("$.body_content").value("There was a good day"));
     }
 
+    @Test
+    void testFetchSiteInfo() throws Exception {
+
+    }
+
 }
 

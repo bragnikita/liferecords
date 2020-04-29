@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jp.bragnikita.liferecords.backend.postings.Posting;
 import jp.bragnikita.liferecords.backend.postings.StorageResource;
 import jp.bragnikita.liferecords.backend.services.DayKey;
+import jp.bragnikita.liferecords.backend.services.SiteInfoService;
 import jp.bragnikita.liferecords.backend.services.StorageException;
 import jp.bragnikita.liferecords.backend.services.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -26,11 +26,14 @@ public class StorageController {
 
     private StorageService storage;
 
+    private SiteInfoService siteInfoService;
+
     @Autowired
     private Environment env;
 
-    public StorageController(@Autowired StorageService storage) {
+    public StorageController(@Autowired StorageService storage, SiteInfoService siteInfoService) {
         this.storage = storage;
+        this.siteInfoService = siteInfoService;
     }
 
     @GetMapping("/postings")
@@ -90,6 +93,11 @@ public class StorageController {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(error);
+    }
+
+    @GetMapping("/service/siteinfo")
+    public SiteInfoService.SitePreview fetchLinkPreview(@RequestParam("url") String url) throws SiteInfoService.SiteUnaccessibleException {
+        return siteInfoService.fetchPreview(url);
     }
 
     public void setEnv(Environment env) {
